@@ -1,16 +1,32 @@
+import '@/dev'
+import { hmac } from '@/hmac'
+import { format } from '@formkit/tempo'
 import { serve } from '@hono/node-server'
+import chalk from 'chalk'
+import 'dotenv/config'
 import { Hono } from 'hono'
+import { logger } from 'hono/logger'
 
+const port = process.env.APP_PORT || 3000
 const app = new Hono()
 
-app.get('/', c => {
-   return c.text('Hello Hono!')
-})
+app.use('*', logger())
 
-const port = 3000
-console.log(`Server is running on port ${port}`)
+app.get('/', c => c.json({ msg: 'Welcome to API with HonoJS... 🌍' }))
 
-serve({
-   fetch: app.fetch,
-   port,
-})
+app.route('/api', hmac)
+
+serve(
+   {
+      fetch: app.fetch.bind(app),
+      port: Number(port),
+   },
+   () =>
+      console.log(
+         chalk.blackBright.bold(
+            `[${format(new Date(), { date: 'short' })} - ${format(new Date(), { time: 'medium' })}]`,
+         ) +
+            chalk.yellowBright.bold(' - Servidor en el puerto ') +
+            chalk.blueBright.italic(`${port}`),
+      ),
+)

@@ -1,0 +1,26 @@
+### Generar firma
+POST http://localhost:5000/api/hmac/signature
+Content-Type: application/json
+
+{
+   "message": "Hello, World!"
+}
+
+### Envio de mensaje incorrecto
+POST http://localhost:5000/api/hmac
+Content-Type: application/json
+X-Signature: 86412d8941c9c6a3e9a3dc3baaad7c6d53528ad68d70c5fe5b8fd7993978de30
+
+{
+   "message": "Hello, World!",
+   "key": "secret"
+}
+
+### Envio de mensaje correcto
+POST http://localhost:5000/api/hmac
+Content-Type: application/json
+X-Signature: 86412d8941c9c6a3e9a3dc3baaad7c6d53528ad68d70c5fe5b8fd7993978de30
+
+{
+   "message": "Hello, World!"
+}
